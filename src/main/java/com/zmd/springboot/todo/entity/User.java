@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -20,9 +22,7 @@ import java.util.List;
 @Entity
 @Table(
         name = "users",
-        indexes = {
-                @Index(name = "idx_users_email", columnList = "email")
-        }
+        indexes = { @Index(name = "idx_users_email", columnList = "email") }
 )
 public class User implements UserDetails {
 
@@ -38,9 +38,11 @@ public class User implements UserDetails {
     @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
 
+    @NonNull
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
+    @NonNull
     @Column(nullable = false)
     private String password;
 
@@ -54,31 +56,28 @@ public class User implements UserDetails {
     @Setter(AccessLevel.NONE)
     private Date updatedAt;
 
-    // Keeps SAME TABLE: user_authorities(user_id, authority)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "user_authorities",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_authorities_user"))
     )
-    private List<Authority> authorities = new java.util.ArrayList<>();
+    @Setter(AccessLevel.NONE)
+    private List<Authority> authorities = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Todo> todos = new java.util.ArrayList<>();
-
-    // --- UserDetails contract (same logic) ---
+    @Setter(AccessLevel.NONE)
+    private transient List<Todo> todos = new ArrayList<>();
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
     @Override
-    public String getUsername() {
+    public @NonNull String getUsername() {
         return email;
     }
 
-    // These defaults return true in Spring Security's interface default impl,
-    // but it's clearer to be explicit in enterprise apps:
     @Override public boolean isAccountNonExpired() { return true; }
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }

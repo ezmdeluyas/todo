@@ -15,20 +15,18 @@ import org.springframework.security.core.GrantedAuthority;
 public class Authority implements GrantedAuthority {
 
     @Column(name = "authority", nullable = false, length = 50)
-    private String authority;
+    private String role;
 
-    // keep protected for JPA
-    protected Authority(String authority) {
-        this.authority = authority;
+    protected Authority(String role) {
+        this.role = role;
     }
 
-    // nice factory method (optional but clean)
-    public static Authority of(String authority) {
-        return new Authority(authority);
+    public static Authority of(String role) {
+        return new Authority(role);
     }
 
     @Override
     public String getAuthority() {
-        return authority;
+        return role;
     }
 }
