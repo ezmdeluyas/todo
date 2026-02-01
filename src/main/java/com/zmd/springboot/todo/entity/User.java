@@ -70,12 +70,12 @@ public class User implements UserDetails {
 
     @Override
     public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return this.authorities;
     }
 
     @Override
     public @NonNull String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override public boolean isAccountNonExpired() { return true; }
