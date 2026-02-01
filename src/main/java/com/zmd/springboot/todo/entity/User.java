@@ -18,7 +18,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 @Table(
         name = "users",
@@ -61,7 +61,6 @@ public class User implements UserDetails {
             name = "user_authorities",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_authorities_user"))
     )
-    @Setter(AccessLevel.NONE)
     private List<Authority> authorities = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)

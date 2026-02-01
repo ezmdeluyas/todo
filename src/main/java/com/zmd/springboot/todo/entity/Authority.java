@@ -10,14 +10,14 @@ import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @EqualsAndHashCode
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Embeddable
 public class Authority implements GrantedAuthority {
 
     @Column(name = "authority", nullable = false, length = 50)
     private String role;
 
-    protected Authority(String role) {
+    public Authority(String role) {
         this.role = role;
     }
 
