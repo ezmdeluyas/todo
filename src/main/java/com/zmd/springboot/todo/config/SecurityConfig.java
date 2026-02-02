@@ -58,21 +58,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
-        http.authorizeHttpRequests(configurer -> {
+        http.authorizeHttpRequests(configurer ->
             configurer.requestMatchers(
                     "/swagger-ui/**", "/v3/api-docs/**",
                     "/swagger-resources/**", "/webjars/**",
-                    "/docs", "/api-docs",
-                    "/api/auth/**").permitAll();
+                    "/docs", "/api-docs/**",
+                    "/api/auth/**").permitAll());
 
-            http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable);
 
-            http.exceptionHandling(exception ->
+        http.exceptionHandling(exception ->
                 exception.authenticationEntryPoint(authenticationEntryPoint()));
 
-            http.sessionManagement((session ->
+        http.sessionManagement((session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)));
-        });
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
